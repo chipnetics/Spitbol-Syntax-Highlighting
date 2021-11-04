@@ -1,0 +1,272 @@
+#################################################################
+## Iro
+################################################################ 
+##
+## * Press Ctrl + '+'/'-' To Zoom in
+## * Press Ctrl + S to save and recalculate... 
+## * Documents are saved to web storage.
+## * Only one save slot supported.
+## * Matches cannot span lines.
+## * Unicode chars must be defined in \u0000 to \uffff format.
+## * All matches must be contained by a single group ( ... )
+## * Look behinds not permitted, (?<= or (?<!
+## * Look forwards are permitted (?= or (?!
+## * Constants are defined as __my_const = (......)
+## * The \= format allows unescaped regular expressions
+## * Constants referenced by match \= $${__my_const}
+## * Constants can reference other constants
+## * You are free to delete all the default scopes.
+## * Twitter : ainslec , Web: http://eeyo.io/iro
+##
+################################################################
+
+name                   = spitbol
+file_extensions []     = sno,sbl;
+
+################################################################
+## Styles
+################################################################
+
+styles [] {
+
+.comment : style {
+   color                 = light_green
+   italic                = true
+   ace_scope             = comment
+   textmate_scope        = comment
+   pygments_scope        = Comment
+}
+
+
+.storage : style {
+   color     = cyan
+   ace_scope             = keyword
+   textmate_scope        = keyword
+   pygments_scope        = Keyword
+}
+
+.keyword : style {
+   color     = violet
+   ace_scope             = keyword
+   textmate_scope        = entity.name.tag.css
+   pygments_scope        = Keyword
+}
+
+.specialnames : style {
+   color     = light_blue
+   ace_scope             = keyword
+   textmate_scope        = entity.other.attribute-name
+   pygments_scope        = Keyword
+}
+
+.builtinfunctions : style {
+   color     = light_yellow
+   ace_scope             = keyword
+   textmate_scope        = constant.regexp
+   pygments_scope        = Keyword
+}
+
+
+.punctuation : style {
+   color     = red_2
+   ace_scope             = punctuation
+   textmate_scope        = string.tag
+   pygments_scope        = Punctuation
+}
+
+.success : style {
+   color     = light_green
+   ace_scope             = punctuation
+   textmate_scope        = comment
+   pygments_scope        = Punctuation
+}
+
+.failure : style {
+   color     = orange
+   ace_scope             = punctuation
+   textmate_scope        = invalid
+   pygments_scope        = Punctuation
+}
+
+.mathoperators : style {
+   color     = gold
+   ace_scope             = punctuation
+   textmate_scope        = constant.numeric
+   pygments_scope        = Punctuation
+}
+
+.assignoperator : style {
+   color     = pink
+   ace_scope             = punctuation
+   textmate_scope        = constant.language
+   pygments_scope        = Punctuation
+}
+
+.text : style {
+   color                 = white
+   ace_scope             = text
+   textmate_scope        = emphasis
+   pygments_scope        = String
+}
+
+.variable : style {
+   color                 = light_grey
+   ace_scope             = text
+   textmate_scope        = text
+   pygments_scope        = String
+}
+
+.numeric : style {
+   color                 = grey
+   ace_scope             = text
+   textmate_scope        = text
+   pygments_scope        = String
+}
+
+
+.other : style {
+   color                 = gold
+   ace_scope             = text
+   textmate_scope        = string.regexp
+   pygments_scope        = String
+}
+
+.illegal : style {
+   color                 = white
+   background_color      = red
+   ace_scope             = invalid
+   textmate_scope        = invalid
+   pygments_scope        = Generic.Error
+}
+
+}
+
+#################################################
+## Parse contexts
+#################################################
+
+contexts [] {
+
+##############################################
+## Main Context - Entry point context
+##############################################
+
+main : context {
+
+   : pattern {
+      regex          \= (^\*.*)
+      styles []       = .comment;
+   }
+   
+   : pattern {
+      regex          \= (^[A-Z0-9a-z._]+)
+      styles []       = .storage;
+   }
+   
+   #unprotected in pink.
+      : pattern {
+      regex          \= (&ABEND|&ANCHOR|&CASE|&CODE|&COMPARE|&DUMP|&ERRLIMIT|&ERRTEXT|&ERRTPE|&FTRACE|&FULLSCAN|&INPUT|&MAXLNGTH|&OUTPUT|&STLIMIT|&PROFILE|&TRACE|&TRIM)
+      styles []       = .keyword;
+   }
+   
+   : pattern {
+      regex          \= (&ABORT|&ALPHABET|&ARB|&BAL|&ERRTEXT|&ERRTYPE|&FAIL|&FENCE|&FILE|&FNCLEVEL|&LASTFILE|&LASTLINE|&LASTNO|&LCASE|&LINE|&PARM|&REM|&RTNTYPE|&STCOUNT|&STFCOUNT|&STNO|&SUCCEED|&UCASE|&ANCHOR|&CASE|&CODE|&DUMP|&ERRLIMIT|&FTRACE|&FULLSCAN|&INPUT|&MAXLNGTH|&OUTPUT|&STLIMIT|&TRACE|&TRIM)
+      styles []       = .keyword;
+   }
+   
+
+  : pattern {
+      regex          \= ([\t\s=]ABORT[\t\s=]|[\t\s=]CONTINUE[\t\s=]|[\t\s=]END[\t\s=]|[\t\s=]FRETURN[\t\s=]|[\t\s=]INPUT[\t\s=]|[\t\s=]NRETURN[\t\s=]|[\t\s=]OUTPUT[\t\s=]|[\t\s=]RETURN[\t\s=]|[\t\s=]SCONTINUE[\t\s=]|[\t\s=]TERMINAL[\t\s=])
+      styles []       = .specialnames;
+   }
+   
+  
+
+   
+      : pattern {
+      regex          \= ((APPLY|ARRAY|CONVERT|ENDFILE|FENCE|HOST|ITEM|ITEM|PROTOTYPE|RSORT|RSORT|SORT|SORT|TABLE|EVAL|CODE|APPLY|ARG|DEFINE|LOAD|LOCAL|OPSYN|UNLOAD|BACKSPACE|DETACH|EJECT|ENDFILE|INPUT|OUTPUT|REWIND|SET|CLEAR|COLLECT|DUMP|CHAR|CONVERT|DATATYPE|DATE|EVAL|SIZE|TIME|ATAN|CHOP|COS|EXP|LN|REMDR|SIN|SQRT|TAN|EQ|GE|GT|INTEGER|LE|LT|NE|DIFFER|IDENT|COPY|DUPL|ANY|ARBNO|BREAK|BREAKX|FENCE|LEN|NOTANY|POS|RPOS|RTAB|SPAN|TAB|EXIT|EXIT|HOST|SETEXIT|STOPTR|TRACE|DATA|FIELD|DATATYPE|LEQ|LGE|LGT|LLE|LLT|LNE|DUPL|LPAD|REPLACE|REVERSE|REWIND|RSORT|SORT|SETEXIT|RPAD|SUBSTR|TRIM))
+      styles []       = .builtinfunctions;
+      
+   }
+   
+    : inline_push {
+      regex          \= (:s\(|:\(|:S\()
+      styles []       = .success;
+      default_style   = .storage
+      : pop {
+         regex       \= (\))
+         styles []    = .success;
+      }
+   }
+   
+     : inline_push {
+      regex          \= (:f\(|:F\(|F\()
+      styles []       = .failure;
+      default_style   = .storage
+      : pop {
+         regex       \= (\))
+         styles []    = .failure;
+      }
+   }
+
+   : inline_push {
+      regex          \= (\")
+      styles []       = .punctuation;
+      default_style   = .text
+      : pop {
+         regex       \= (\")
+         styles []    = .punctuation;
+      }
+   }
+   
+    : inline_push {
+      regex          \= (\')
+      styles []       = .punctuation;
+      default_style   = .text
+      : pop {
+         regex       \= (\')
+         styles []    = .punctuation;
+      }
+   }
+   
+
+   
+    : pattern {
+      regex          \= (\*|\+|-|/|\^|\*\*|!)
+      styles []       = .mathoperators;
+   }
+   
+   : pattern {
+      regex          \= (=)
+      styles []       = .assignoperator;
+   }
+   
+   : pattern {
+      regex          \= (\(|\)|,|\||<|>)
+      styles []       = .punctuation;
+   }
+   
+    : pattern {
+      regex          \= ([0-9])
+      styles []       = .numeric;
+   }
+   
+   : pattern {
+      regex          \= (\s\.\s|\s\?\s)
+      styles []       = .other;
+   }
+
+          : pattern {
+      regex          \= ([A-Z0-9a-z._]+)
+      styles []       = .variable;
+   }
+
+   #: pattern {
+   #   regex          \= ([^\s])
+   #   styles []       = .illegal;
+   #}
+   
+}
+
+   
+}
